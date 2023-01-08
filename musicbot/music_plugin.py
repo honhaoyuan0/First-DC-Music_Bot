@@ -117,7 +117,7 @@ async def loop(ctx: lightbulb.Context) -> None:
             query = node.now_playing.track.info.title
             node.is_on_loops = True
             query_information = await plugin.bot.d.lavalink.auto_search_tracks(query)
-            await ctx.respond("You choosed to ask HHY loop singing for you :)")
+            await ctx.respond("You chose to ask HHY loop singing for you :)")
             while node.is_on_loops == True:
                 await plugin.bot.d.lavalink.play(ctx.guild_id, query_information.tracks[0]).requester(ctx.author.id).queue()
     else:
