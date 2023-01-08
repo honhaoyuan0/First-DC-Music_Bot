@@ -1,0 +1,43 @@
+@bot.listen(hikari.StartedEvent)
+async def on_ready(event):
+    for guild in bot.cache.get_guilds_view():
+        is_music_Queue[guild] = []
+        queue_Index[guild] = 0
+        vc[guild] = None
+        is_paused[guild] = is_playing[guild] = False
+    print("A" , vc)
+
+@bot.command
+@lightbulb.option('song_name', 'song name lo')
+@lightbulb.command('play', 'play song')
+@lightbulb.implements(lightbulb.SlashCommand)
+async def play(ctx, *args) -> None:
+    search = " ".join(args)
+    try:
+        userChannel = ctx.bot.cache.get_voice_state(ctx.guild_id, ctx.author).channel_id
+    except:
+        await ctx.respond("You must be connected to a voice channel")
+        return
+    if not args:
+        #if len(is_music_Queue[ctx.guild_id]) == 0:
+           # ctx.respond('there are no songs to be played')
+            #return
+        if not is_playing[ctx.guild_id]:
+            if is_music_Queue[ctx.guild_id] == None or vc[ctx.guild_id] == None:
+                await play_music(ctx)
+            else:
+                is_paused[ctx.guild_id] = False
+                is_playing[ctx.guild_id] = True
+                vc[ctx.guild_id].resume()
+        else:
+            return
+    else:
+        song = extract_YT(search_YT(search)[0])
+        if type(song) == type(True):
+            await ctx.respond("Could not download song incorrect format. Try different keywords")
+        else:
+            is_music_Queue[ctx.guild_id].append(song, userChannel)
+            if not is_playing[ctx.guild_id]:
+                await play_music(ctx)
+            else:
+                ctx.respond("Added to queue")
