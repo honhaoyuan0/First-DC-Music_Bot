@@ -135,7 +135,6 @@ async def sloop(ctx: lightbulb.Context) -> None:
             await ctx.respond("You need to have a song playing in order to stop looping")
         else:
             node.is_on_loops = False
-            await plugin.bot.d.lavalink.remove_guild_from_loops(ctx.guild_id)
             await ctx.respond("Dont want HHY to sing ady?")
     else:
         await ctx.respond("You need to be connected to a voice channel to loop")
